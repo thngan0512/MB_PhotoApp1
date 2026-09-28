@@ -5,13 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
   public GridView gridview;
+  public ProgressBar pb_loading;
 
-  private AdapterView.OnItemClickListener onitemclick = new AdapterView.OnItemClickListener() {
+  private final AdapterView.OnItemClickListener onitemclick = new AdapterView.OnItemClickListener() {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
       Intent intent = new Intent(getBaseContext(), ViewArticleActivity.class);
@@ -24,11 +26,15 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    getSupportActionBar().hide();
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().hide();
+    }
 
     gridview = findViewById(R.id.gridview);
-    new ArticleData(getBaseContext(), gridview).loadData("https://raw.githubusercontent.com/thanhdnh/json/main/products.json", this);
+    pb_loading = findViewById(R.id.pb_loading);
+
+    // Initialize UserData with downloadWithProgress support
+    new UserData(getBaseContext(), gridview, pb_loading).loadData("https://raw.githubusercontent.com/thanhdnh/json/main/users.json", this);
     gridview.setOnItemClickListener(onitemclick);
   }
-
 }
